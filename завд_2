@@ -1,0 +1,112 @@
+using System;
+using System.Globalization;
+
+class Parent
+{
+    protected double Side1;
+    protected double Side2;
+    protected double AngleDegrees;
+    protected double AngleRadians;
+    protected double Diagonal1;
+    protected double Diagonal2;
+
+    public Parent()
+    {
+        Side1 = 0;
+        Side2 = 0;
+        AngleDegrees = 0;
+        AngleRadians = 0;
+        Diagonal1 = 0;
+        Diagonal2 = 0;
+    }
+
+    public Parent(double side1, double side2, double angleDegrees)
+    {
+        Side1 = side1;
+        Side2 = side2;
+        AngleDegrees = angleDegrees;
+        AngleRadians = angleDegrees * (Math.PI / 180);
+        Diagonal1 = 0;
+        Diagonal2 = 0;
+    }
+
+    public void Print()
+    {
+        Console.WriteLine($"Сторона1={Side1} Сторона2={Side2} кут={AngleDegrees.ToString("0.##", CultureInfo.InvariantCulture)}");
+    }
+
+    public double Metod1()
+    {
+        return Side1 * Side2 * Math.Sin(AngleRadians);
+    }
+
+    public (double, double) Metod2()
+    {
+        Diagonal1 = Math.Sqrt(Math.Pow(Side1, 2) + Math.Pow(Side2, 2) - 2 * Side1 * Side2 * Math.Cos(AngleRadians));
+        Diagonal2 = Math.Sqrt(Math.Pow(Side1, 2) + Math.Pow(Side2, 2) + 2 * Side1 * Side2 * Math.Cos(AngleRadians));
+        return (Diagonal1, Diagonal2);
+    }
+}
+
+class Child : Parent
+{
+    public Child(double side1, double side2) : base(side1, side2, 90)
+    {
+    }
+
+    public double Metod3()
+    {
+        double radius = Diagonal1 / 2;
+        return Math.PI * Math.Pow(radius, 2);
+    }
+
+    public double Metod4()
+    {
+        return 2 * Math.PI * Diagonal1 / 2;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+        Random random = new Random();
+
+        for (int i = 0; i < 5; i++)
+        {
+            Console.Write("Введіть сторону 1: ");
+            double side1 = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+            Console.Write("Введіть сторону 2: ");
+            double side2 = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+            Console.Write("Введіть кут в градусах: ");
+            double angle = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+
+            if (angle != 90)
+            {
+                Parent parent = new Parent(side1, side2, angle);
+                Console.WriteLine("Паралелограмм: ");
+                parent.Print();
+                Console.WriteLine($"Площадь={parent.Metod1().ToString("0.00", CultureInfo.InvariantCulture)}");
+                var diagonals = parent.Metod2();
+                Console.WriteLine($"Диагональ1 ={diagonals.Item1.ToString("0.00", CultureInfo.InvariantCulture)} Диагональ2 ={diagonals.Item2.ToString("0.00", CultureInfo.InvariantCulture)}");
+            }
+            else
+            {
+                Child child = new Child(side1, side2);
+                Console.WriteLine("Прямоугольник: ");
+                child.Print();
+                Console.WriteLine($"Площадь={child.Metod1().ToString("0.00", CultureInfo.InvariantCulture)}");
+                var diagonals = child.Metod2();
+                Console.WriteLine($"Диагональ1 ={diagonals.Item1.ToString("0.00", CultureInfo.InvariantCulture)} Диагональ2 ={diagonals.Item2.ToString("0.00", CultureInfo.InvariantCulture)}");
+
+                Console.WriteLine("Описана окружность: ");
+                Console.WriteLine($"Площа={child.Metod3().ToString("0.00", CultureInfo.InvariantCulture)}");
+                Console.WriteLine($"Довжина={child.Metod4().ToString("0.00", CultureInfo.InvariantCulture)}");
+            }
+
+            Console.WriteLine();
+        }
+    }
+}
