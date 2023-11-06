@@ -1,0 +1,122 @@
+using System;
+
+class Parent
+{
+    protected double Довжина;
+    protected double Ширина;
+    protected double Висота;
+    protected double ПлощаСтін;
+    protected double ПотрібноШтукатурки;
+
+    public Parent()
+    {
+        Довжина = 0;
+        Ширина = 0;
+        Висота = 0;
+        ПлощаСтін = 0;
+        ПотрібноШтукатурки = 0;
+    }
+
+    public Parent(double довжина, double ширина, double висота)
+    {
+        Довжина = довжина;
+        Ширина = ширина;
+        Висота = висота;
+        ПлощаСтін = 2 * (Довжина + Ширина) * Висота;
+        ПотрібноШтукатурки = ПлощаСтін * 5;
+    }
+
+    public void Print()
+    {
+        Console.WriteLine($"Довжина-{Довжина}, ширина-{Ширина}, висота-{Висота}");
+        Console.WriteLine($"Площа стін-{ПлощаСтін}, штукатурки-{ПотрібноШтукатурки} кг");
+    }
+
+    public bool Metod1(double штукатуркаЗаДень)
+    {
+        if (ПотрібноШтукатурки > 0)
+        {
+            ПотрібноШтукатурки -= штукатуркаЗаДень;
+            Console.WriteLine($"Залишилось штукатурки-{ПотрібноШтукатурки} кг");
+            return true;
+        }
+        Console.WriteLine("Штукатурка закінчилася");
+        return false;
+    }
+}
+
+class Child : Parent
+{
+    protected double ШиринаШпалер;
+    protected double ДовжинаШпалер;
+    protected double КількістьРулонів;
+
+    public Child(double довжина, double ширина, double висота, double ширинаШпалер, double довжинаШпалер)
+        : base(довжина, ширина, висота)
+    {
+        ШиринаШпалер = ширинаШпалер;
+        ДовжинаШпалер = довжинаШпалер;
+        КількістьРулонів = Math.Ceiling(ПлощаСтін / (ширинаШпалер * довжинаШпалер));
+    }
+
+    public void Print()
+    {
+        base.Print();
+        Console.WriteLine($"Ширина рулона-{ШиринаШпалер} Довжина рулона-{ДовжинаШпалер} Кількість рулонів-{КількістьРулонів}");
+    }
+
+    public bool Metod2(double рулониЗаДень)
+    {
+        if (КількістьРулонів > 0)
+        {
+            КількістьРулонів -= рулониЗаДень;
+            Console.WriteLine($"Залишилось рулонів-{КількістьРулонів}");
+            return true;
+        }
+        Console.WriteLine("Рулони закінчились");
+        return false;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        Console.InputEncoding = System.Text.Encoding.UTF8;
+
+        Console.WriteLine("Введіть довжину кімнати:");
+        double довжина = double.Parse(Console.ReadLine());
+        Console.WriteLine("Введіть ширину кімнати:");
+        double ширина = double.Parse(Console.ReadLine());
+        Console.WriteLine("Введіть висоту кімнати:");
+        double висота = double.Parse(Console.ReadLine());
+
+        Parent parent = new Parent(довжина, ширина, висота);
+        parent.Print();
+        int daysToPlaster = 0;
+        double штукатуркаЗаДень = 100;
+
+        while (parent.Metod1(штукатуркаЗаДень))
+        {
+            daysToPlaster++;
+        }
+        Console.WriteLine($"Штукатурим {daysToPlaster} дн по 100 кг в день");
+
+        Console.WriteLine("Введіть ширину шпалер:");
+        double ширинаШпалер = double.Parse(Console.ReadLine());
+        Console.WriteLine("Введіть довжину шпалер в рулоні:");
+        double довжинаШпалер = double.Parse(Console.ReadLine());
+
+        Child child = new Child(довжина, ширина, висота, ширинаШпалер, довжинаШпалер);
+        child.Print();
+        int daysToWallpaper = 0;
+        double рулониЗаДень = 3;
+
+        while (child.Metod2(рулониЗаДень))
+        {
+            daysToWallpaper++;
+        }
+        Console.WriteLine($"Клеємо шпалери {daysToWallpaper} дн по 3 рулона в день");
+    }
+}
