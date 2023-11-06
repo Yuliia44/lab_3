@@ -1,0 +1,121 @@
+using System;
+using System.Globalization;
+using System.Text;
+
+class Parent
+{
+    protected double Pole1;
+    protected double Pole2;
+
+    public Parent(double pole1, double pole2)
+    {
+        Pole1 = pole1;
+        Pole2 = pole2;
+    }
+
+    public virtual void Print()
+    {
+        Console.WriteLine($"Мінімальна допомога: {Pole1:F0} Підвищуючий коефіцієнт: {Pole2:F1}");
+    }
+
+    public virtual double Metod()
+    {
+        return Pole1 * Pole2;
+    }
+}
+
+class Child1 : Parent
+{
+    private int Pole3;
+
+    public Child1(double pole1, double pole2, int pole3) : base(pole1, pole2)
+    {
+        Pole3 = pole3;
+    }
+
+    public override void Print()
+    {
+        base.Print();
+        Console.WriteLine($"Група інвалідності: {Pole3}");
+        Console.WriteLine($"Допомога по інвалідності: {Metod():F0}");
+    }
+
+    public override double Metod()
+    {
+        double parentValue = base.Metod();
+        if (Pole3 == 1)
+        {
+            return parentValue * 1.3;
+        }
+        else if (Pole3 == 2)
+        {
+            return parentValue * 1.2;
+        }
+        return parentValue;
+    }
+}
+
+class Child2 : Parent
+{
+    private int Pole4;
+
+    public Child2(double pole1, double pole2, int pole4) : base(pole1, pole2)
+    {
+        Pole4 = pole4;
+    }
+
+    public override void Print()
+    {
+        base.Print();
+        Console.WriteLine($"Кількість дітей: {Pole4}");
+        Console.WriteLine($"Допомога многодітнім: {Metod():F0}");
+    }
+
+    public override double Metod()
+    {
+        double parentValue = base.Metod();
+        if (Pole4 >= 3 && Pole4 <= 5)
+        {
+            return parentValue * 1.1;
+        }
+        else if (Pole4 > 5)
+        {
+            return parentValue * 1.2;
+        }
+        return parentValue;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.OutputEncoding = Encoding.UTF8;
+        Console.InputEncoding = Encoding.UTF8;
+        CultureInfo customCulture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        customCulture.NumberFormat.NumberDecimalSeparator = ".";
+        System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
+
+        Console.WriteLine("Введіть мінімальну допомогу:");
+        double pole1 = double.Parse(Console.ReadLine());
+
+        Console.WriteLine("Введіть підвищуючий коефіцієнт:");
+        double pole2 = double.Parse(Console.ReadLine());
+
+        Parent parent = new Parent(pole1, pole2);
+
+        Console.WriteLine("Введіть групу інвалідності:");
+        int pole3Child1 = int.Parse(Console.ReadLine());
+        Child1 child1 = new Child1(pole1, pole2, pole3Child1);
+
+        Console.WriteLine("Введіть кількість дітей:");
+        int pole4Child2 = int.Parse(Console.ReadLine());
+        Child2 child2 = new Child2(pole1, pole2, pole4Child2);
+
+        parent.Print();
+
+        child1.Print();
+
+        child2.Print();
+    }
+}
