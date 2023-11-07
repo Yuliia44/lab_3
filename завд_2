@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Globalization;
 
 class Parent
@@ -32,7 +33,7 @@ class Parent
 
     public void Print()
     {
-        Console.WriteLine($"Сторона1={Side1} Сторона2={Side2} кут={AngleDegrees.ToString("0.##", CultureInfo.InvariantCulture)}");
+        Console.WriteLine($"Сторона 1={Side1} Сторона 2={Side2} кут={AngleDegrees.ToString("0.##", CultureInfo.InvariantCulture)}");
     }
 
     public double Metod1()
@@ -76,37 +77,28 @@ class Program
 
         for (int i = 0; i < 5; i++)
         {
-            Console.Write("Введіть сторону 1: ");
-            double side1 = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
-            Console.Write("Введіть сторону 2: ");
-            double side2 = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
-            Console.Write("Введіть кут в градусах: ");
-            double angle = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+            double side1 = random.Next(1, 10);
+            double side2 = random.Next(1, 10);
+            int angle = random.Next(70, 100);
 
             if (angle != 90)
             {
-                Parent parent = new Parent(side1, side2, angle);
-                Console.WriteLine("Паралелограмм: ");
-                parent.Print();
-                Console.WriteLine($"Площадь={parent.Metod1().ToString("0.00", CultureInfo.InvariantCulture)}");
-                var diagonals = parent.Metod2();
-                Console.WriteLine($"Диагональ1 ={diagonals.Item1.ToString("0.00", CultureInfo.InvariantCulture)} Диагональ2 ={diagonals.Item2.ToString("0.00", CultureInfo.InvariantCulture)}");
+                Parent parallelogram = new Parent(side1, side2, angle);
+                parallelogram.Print();
+                Console.WriteLine("Площа паралелограма: " + parallelogram.Metod1());
+                var diagonals = parallelogram.Metod2();
+                Console.WriteLine($"Діагональ 1: {diagonals.Item1}, Діагональ 2: {diagonals.Item2}");
             }
             else
             {
-                Child child = new Child(side1, side2);
-                Console.WriteLine("Прямоугольник: ");
-                child.Print();
-                Console.WriteLine($"Площадь={child.Metod1().ToString("0.00", CultureInfo.InvariantCulture)}");
-                var diagonals = child.Metod2();
-                Console.WriteLine($"Диагональ1 ={diagonals.Item1.ToString("0.00", CultureInfo.InvariantCulture)} Диагональ2 ={diagonals.Item2.ToString("0.00", CultureInfo.InvariantCulture)}");
-
-                Console.WriteLine("Описана окружность: ");
-                Console.WriteLine($"Площа={child.Metod3().ToString("0.00", CultureInfo.InvariantCulture)}");
-                Console.WriteLine($"Довжина={child.Metod4().ToString("0.00", CultureInfo.InvariantCulture)}");
+                Child rectangle = new Child(side1, side2);
+                rectangle.Print();
+                Console.WriteLine("Площа: " + rectangle.Metod1());
+                var diagonals = rectangle.Metod2();
+                Console.WriteLine($"Діагональ 1: {diagonals.Item1}, Діагональ 2: {diagonals.Item2}");
+                Console.WriteLine("Площа описаного кола: " + rectangle.Metod3());
+                Console.WriteLine("Довжина описаного кола: " + rectangle.Metod4());
             }
-
-            Console.WriteLine();
         }
     }
 }
